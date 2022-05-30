@@ -1,0 +1,6 @@
+module Pods_gym {
+  umbrella header "Pods-gym-umbrella.h"
+
+  export *
+  module * { export * }
+}
