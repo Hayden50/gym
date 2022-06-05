@@ -14,11 +14,8 @@ const LiftCard = props => {
 
 const styles = StyleSheet.create({
   cardBox: {
-    margin: 10,
-    padding: 5,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: '#0000000',
+    width: '90%',
+    height: 40,
   },
   propNameStyle: {
     fontWeight: 'bold',
