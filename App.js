@@ -6,10 +6,10 @@ import Editor from './screens/Editor';
 
 export default function App() {
   return (
-    <Swiper index={1} loop={false}>
-      <Editor />
-      <Home />
-      <History />
-    </Swiper>
+    <Editor />
+    // <Swiper index={1} loop={false}>
+    //   <Home />
+    //   <History />
+    // </Swiper>
   );
 }
