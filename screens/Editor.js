@@ -17,7 +17,7 @@ import DayButton from '../components/DayButton';
 const possibleNums = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 let origButtonStatusArray = [false, false, false, false, false, false, false];
 
-export default function Editor() {
+export default function Editor({navigation}) {
   const [lift, setLift] = useState('');
   const [nums, setNums] = useState(-1);
   const [liftArray, setLiftArray] = useState([]);
@@ -66,12 +66,7 @@ export default function Editor() {
     if (modalVisible) {
       setModalVisible(!modalVisible);
     } else {
-      Alert.alert('Error', 'Have not implemented functionality yet', [
-        {
-          text: 'Close',
-          style: 'cancel',
-        },
-      ]);
+      navigation.navigate('Home');
     }
   };
 
@@ -97,6 +92,21 @@ export default function Editor() {
     } else {
       setModalVisible(true);
     }
+  };
+
+  const handleSubmitClick = () => {
+    for (const day of buttonStatusArr) {
+      if (day === true) {
+        navigation.navigate('Home');
+        return;
+      }
+    }
+    Alert.alert('Error', 'You must select at least one day of the week', [
+      {
+        text: 'Close',
+        style: 'cancel',
+      },
+    ]);
   };
 
   const handleDayButtonClick = index => {
@@ -167,8 +177,8 @@ export default function Editor() {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.submitButton}
-              onPress={() => handleNextClick()}>
-              <Text>{modalVisible === false ? 'Next' : 'Submit'}</Text>
+              onPress={() => handleSubmitClick()}>
+              <Text>Submit</Text>
             </TouchableOpacity>
           </View>
         </Modal>
