@@ -2,7 +2,6 @@
 import React, {useState, useCallback} from 'react';
 import {
   View,
-  SafeAreaView,
   Text,
   Keyboard,
   TouchableOpacity,
@@ -21,14 +20,12 @@ import theme from '../styles/theme.style';
 const colors = theme.COLORS;
 const colorArr = [
   colors.blue,
-  colors.green,
+  colors.yellow,
   colors.red,
-  colors.blue,
+  colors.purple,
   colors.green,
-  colors.red,
-  colors.blue,
-  colors.green,
-  colors.red,
+  colors.orange,
+  colors.pink,
 ];
 
 const possibleNums = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
@@ -248,6 +245,7 @@ export default function Editor({navigation}) {
               placeholderTextColor={'#DEDEDE'}
               onChangeText={newText => setLift(newText)}
               value={lift}
+              style={styles.placeholderWorkoutInput}
             />
             <View>
               <TextInput
@@ -258,6 +256,7 @@ export default function Editor({navigation}) {
                 onChangeText={newText => setNums(newText)}
                 maxLength={1}
                 value={nums}
+                style={{color: colorArr[currentColor]}}
               />
             </View>
           </View>
@@ -349,6 +348,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'center',
+  },
+  placeholderWorkoutInput: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   returnButton: {
     margin: 5,

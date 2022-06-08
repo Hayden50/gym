@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   },
   propNameStyle: {
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: 20,
     color: 'white',
   },
   numSetStyle: {

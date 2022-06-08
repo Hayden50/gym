@@ -7,6 +7,7 @@ import {
   Modal,
 } from 'react-native';
 import React from 'react';
+import theme from '../styles/theme.style';
 
 const EditorTitle = props => {
   return (
@@ -14,7 +15,7 @@ const EditorTitle = props => {
       <View style={styles.topBar}>
         <TextInput
           placeholder="Name Your Workout"
-          placeholderTextColor={'#DEDEDE'}
+          placeholderTextColor={theme.COLORS.light_gray}
           onChange={props.onChange}
           style={{...styles.title, color: props.colorArr[props.currentColor]}}
           maxLength={19}
@@ -68,6 +69,7 @@ const styles = StyleSheet.create({
   title: {
     flexDirection: 'row',
     textAlign: 'center',
+    fontStyle: 'italic',
     fontSize: 20,
     fontWeight: 'bold',
     marginVertical: 10,
@@ -104,9 +106,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   modalColorButton: {
-    height: 30,
-    width: 30,
-    borderRadius: 6,
+    height: 50,
+    width: 50,
+    borderRadius: 8,
     margin: 8,
   },
 });
