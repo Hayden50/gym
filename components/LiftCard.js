@@ -6,7 +6,9 @@ const LiftCard = props => {
     <View style={styles.cardBox}>
       <Text style={styles.propNameStyle}>{props.name}</Text>
       <View>
-        <Text style={styles.numSetStyle}>{props.numSet}</Text>
+        <Text style={{...styles.numSetStyle, color: props.numSetColor}}>
+          {props.numSet} {props.numSet === '1' ? 'set' : 'sets'}
+        </Text>
       </View>
     </View>
   );
@@ -15,15 +17,16 @@ const LiftCard = props => {
 const styles = StyleSheet.create({
   cardBox: {
     width: '90%',
-    height: 40,
+    height: 60,
   },
   propNameStyle: {
     fontWeight: 'bold',
     fontSize: 15,
+    color: 'white',
   },
   numSetStyle: {
     fontSize: 15,
-    color: '#FF0000',
+    fontStyle: 'italic',
   },
 });
 

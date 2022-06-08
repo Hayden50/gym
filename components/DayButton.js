@@ -8,10 +8,11 @@ const DayButton = props => {
       onPress={props.onPress}
       style={{
         borderWidth: 1,
-        borderColor: 'blue',
-        borderRadius: 20,
+        borderColor: props.currColor,
+        borderRadius: 10,
         marginBottom: 20,
-        backgroundColor: props.buttonStatus === false ? 'white' : 'blue',
+        backgroundColor:
+          props.buttonStatus === false ? '#333333' : props.currColor,
         height: 55,
         width: 250,
         alignItems: 'center',
@@ -21,7 +22,7 @@ const DayButton = props => {
           fontSize: 22,
           paddingHorizontal: 45,
           paddingVertical: 12,
-          color: props.buttonStatus === false ? 'black' : 'white',
+          color: props.buttonStatus === false ? props.currColor : 'black',
         }}>
         {props.day}
       </Text>

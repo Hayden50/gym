@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState, useCallback} from 'react';
 import {
   View,
@@ -9,10 +10,26 @@ import {
   StyleSheet,
   Modal,
   Alert,
+  ScrollView,
 } from 'react-native';
 import LiftCard from '../components/LiftCard';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+// import Ionicons from '../node_modules/react-native-vector-icons/Ionicons';
 import DayButton from '../components/DayButton';
+import EditorTitle from '../components/EditorTitle';
+import theme from '../styles/theme.style';
+
+const colors = theme.COLORS;
+const colorArr = [
+  colors.blue,
+  colors.green,
+  colors.red,
+  colors.blue,
+  colors.green,
+  colors.red,
+  colors.blue,
+  colors.green,
+  colors.red,
+];
 
 const possibleNums = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 let origButtonStatusArray = [false, false, false, false, false, false, false];
@@ -27,6 +44,8 @@ export default function Editor({navigation}) {
   const [buttonStatusArr, setButtonStatusArr] = useState(origButtonStatusArray);
   const [, updateState] = useState();
   const forceUpdate = useCallback(() => updateState({}), []);
+  const [colorModalVisible, setColorModalVisible] = useState(false);
+  const [currentColor, setCurrentColor] = useState(0);
 
   const handleAddLift = () => {
     if (lift !== null && lift !== '' && nums !== null && nums !== -1) {
@@ -53,6 +72,11 @@ export default function Editor({navigation}) {
         },
       ]);
     }
+  };
+
+  const handleModalColorClick = index => {
+    setColorModalVisible(false);
+    setCurrentColor(index);
   };
 
   const handleRemoveLift = index => {
@@ -117,151 +141,182 @@ export default function Editor({navigation}) {
   };
 
   return (
-    <>
-      <SafeAreaView>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-          style={styles.modalStyle}>
-          <View style={styles.submitCard}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalTitle}>
-                Choose the Days of this Workout
-              </Text>
-              <DayButton
-                day="Monday"
-                buttonStatus={buttonStatusArr[0]}
-                onPress={() => handleDayButtonClick(0)}
-              />
-              <DayButton
-                day="Tuesday"
-                buttonStatus={buttonStatusArr[1]}
-                onPress={() => handleDayButtonClick(1)}
-              />
-              <DayButton
-                day="Wednesday"
-                buttonStatus={buttonStatusArr[2]}
-                onPress={() => handleDayButtonClick(2)}
-              />
-              <DayButton
-                day="Thursday"
-                buttonStatus={buttonStatusArr[3]}
-                onPress={() => handleDayButtonClick(3)}
-              />
-              <DayButton
-                day="Friday"
-                buttonStatus={buttonStatusArr[4]}
-                onPress={() => handleDayButtonClick(4)}
-              />
-              <DayButton
-                day="Saturday"
-                buttonStatus={buttonStatusArr[5]}
-                onPress={() => handleDayButtonClick(5)}
-              />
-              <DayButton
-                day="Sunday"
-                buttonStatus={buttonStatusArr[6]}
-                onPress={() => handleDayButtonClick(6)}
-              />
+    <View style={styles.fullView}>
+      <View>
+        <ScrollView style={styles.scrollView}>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
+            }}
+            style={styles.modalStyle}>
+            <View style={styles.submitCard}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalTitle}>
+                  Choose the Days of this Workout
+                </Text>
+                <DayButton
+                  day="Monday"
+                  buttonStatus={buttonStatusArr[0]}
+                  onPress={() => handleDayButtonClick(0)}
+                  currColor={colorArr[currentColor]}
+                />
+                <DayButton
+                  day="Tuesday"
+                  buttonStatus={buttonStatusArr[1]}
+                  onPress={() => handleDayButtonClick(1)}
+                  currColor={colorArr[currentColor]}
+                />
+                <DayButton
+                  day="Wednesday"
+                  buttonStatus={buttonStatusArr[2]}
+                  onPress={() => handleDayButtonClick(2)}
+                  currColor={colorArr[currentColor]}
+                />
+                <DayButton
+                  day="Thursday"
+                  buttonStatus={buttonStatusArr[3]}
+                  onPress={() => handleDayButtonClick(3)}
+                  currColor={colorArr[currentColor]}
+                />
+                <DayButton
+                  day="Friday"
+                  buttonStatus={buttonStatusArr[4]}
+                  onPress={() => handleDayButtonClick(4)}
+                  currColor={colorArr[currentColor]}
+                />
+                <DayButton
+                  day="Saturday"
+                  buttonStatus={buttonStatusArr[5]}
+                  onPress={() => handleDayButtonClick(5)}
+                  currColor={colorArr[currentColor]}
+                />
+                <DayButton
+                  day="Sunday"
+                  buttonStatus={buttonStatusArr[6]}
+                  onPress={() => handleDayButtonClick(6)}
+                  currColor={colorArr[currentColor]}
+                />
+              </View>
             </View>
-          </View>
-          <View style={styles.bottomModalButtons}>
-            <TouchableOpacity
-              style={styles.returnButton}
-              onPress={() => handleBackClick()}>
-              <Text>{modalVisible === false ? 'Cancel' : 'Back'}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={() => handleSubmitClick()}>
-              <Text>Submit</Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
-
-        <TextInput
-          placeholder="Name Your Workout"
-          onChange={newText => setWorkoutName(newText)}
-          style={styles.title}
-          value={workoutName}
-          maxLength={19}
-        />
-
-        {liftArray.map((currLift, index) => {
-          return (
-            <View key={index} style={styles.fullCard}>
-              <LiftCard name={currLift.name} numSet={currLift.setNum} />
+            <View style={styles.bottomModalButtons}>
               <TouchableOpacity
-                onPress={() => handleRemoveLift(index)}
-                style={styles.removeButton}>
-                <Ionicons name="trash-outline" size={20} />
+                style={styles.returnModalButton}
+                onPress={() => handleBackClick()}>
+                <Text> </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.submitModalButton}
+                onPress={() => handleSubmitClick()}>
+                <Text> </Text>
               </TouchableOpacity>
             </View>
-          );
-        })}
+          </Modal>
 
-        <View style={styles.cardBox}>
-          <TextInput
-            placeholder="Workout Name"
-            onChangeText={newText => setLift(newText)}
-            value={lift}
+          <EditorTitle
+            onChange={newText => setWorkoutName(newText)}
+            colorArr={colorArr}
+            currentColor={currentColor}
+            colorModalVisible={colorModalVisible}
+            changeVisibility={() => setColorModalVisible(!colorModalVisible)}
+            handleModalColorClick={index => handleModalColorClick(index)}
           />
-          <View>
-            <TextInput
-              type={'number'}
-              placeholder="Number of Sets"
-              keyboardType="number-pad"
-              onChangeText={newText => setNums(newText)}
-              value={nums}
-              maxLength={1}
-            />
-          </View>
-        </View>
 
-        <TouchableOpacity
-          onPress={() => handleAddLift()}
-          style={styles.addLiftButton}>
-          <Ionicons name="add-outline" size={35} />
-        </TouchableOpacity>
-      </SafeAreaView>
+          {liftArray.map((currLift, index) => {
+            return (
+              <View key={index} style={styles.fullCard}>
+                <LiftCard
+                  name={currLift.name}
+                  numSet={currLift.setNum}
+                  numSetColor={colorArr[currentColor]}
+                />
+                <TouchableOpacity
+                  onPress={() => handleRemoveLift(index)}
+                  style={styles.removeButton}>
+                  {/* <Ionicons name="trash-outline" size={20} /> */}
+                  <Text>X</Text>
+                </TouchableOpacity>
+              </View>
+            );
+          })}
+
+          <View style={styles.cardBox}>
+            <TextInput
+              placeholder="Workout Name"
+              placeholderTextColor={'#DEDEDE'}
+              onChangeText={newText => setLift(newText)}
+              value={lift}
+            />
+            <View>
+              <TextInput
+                type={'number'}
+                placeholder="Number of Sets"
+                placeholderTextColor={'#DEDEDE'}
+                keyboardType="number-pad"
+                onChangeText={newText => setNums(newText)}
+                maxLength={1}
+                value={nums}
+              />
+            </View>
+          </View>
+
+          <TouchableOpacity
+            onPress={() => handleAddLift()}
+            style={styles.addLiftButton}>
+            {/* <Ionicons name="add-outline" size={35} /> */}
+            <Text>+</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
 
       <View style={styles.bottomButtons}>
         <TouchableOpacity
           style={styles.returnButton}
           onPress={() => handleBackClick()}>
-          <Text>{modalVisible === false ? 'Cancel' : 'Back'}</Text>
+          <Text style={styles.bottomCardText}>
+            {modalVisible === false ? 'Cancel' : 'Back'}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.submitButton}
+          style={{
+            ...styles.submitButton,
+            backgroundColor:
+              modalVisible && buttonStatusArr !== [0, 0, 0, 0, 0, 0, 0]
+                ? colorArr[currentColor]
+                : colors.light_gray,
+          }}
           onPress={() => handleNextClick()}>
-          <Text>{modalVisible === false ? 'Next' : 'Submit'}</Text>
+          <Text style={styles.bottomCardText}>
+            {modalVisible === false ? 'Next' : 'Submit'}
+          </Text>
         </TouchableOpacity>
       </View>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   cardBox: {
-    margin: 10,
+    marginHorizontal: 10,
+    marginVertical: 5,
     paddingHorizontal: 5,
     paddingVertical: 10,
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: '#0000000',
-    borderRadius: 20,
+    borderRadius: 10,
+    backgroundColor: '#333333',
+    height: 80,
   },
-  propNameStyle: {
-    fontWeight: 'bold',
-    fontSize: 15,
+  scrollView: {
+    height: '87.5%',
+    paddingTop: 37.5,
   },
-  numSetStyle: {
-    fontSize: 15,
-    color: '#FF0000',
+  fullView: {
+    backgroundColor: '#191919',
+    flex: 1,
   },
   addLiftButton: {
     flexDirection: 'row',
@@ -270,15 +325,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginHorizontal: 150,
     marginVertical: 10,
-    borderRadius: 20,
-  },
-  title: {
-    flexDirection: 'row',
-    textAlign: 'center',
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#FF0000',
-    marginVertical: 10,
+    borderRadius: 10,
   },
   fullCard: {
     margin: 10,
@@ -287,7 +334,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#000000',
     flexDirection: 'row',
-    borderRadius: 20,
+    borderRadius: 10,
+    backgroundColor: '#333333',
   },
   removeButton: {
     width: '10%',
@@ -297,7 +345,7 @@ const styles = StyleSheet.create({
   },
   bottomButtons: {
     position: 'absolute',
-    bottom: 30,
+    bottom: 25,
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'center',
@@ -309,7 +357,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     width: '45%',
-    borderRadius: 20,
+    borderRadius: 10,
+    backgroundColor: '#333333',
   },
   submitButton: {
     margin: 5,
@@ -318,7 +367,24 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderWidth: 1,
     width: '45%',
-    borderRadius: 20,
+    borderRadius: 10,
+    backgroundColor: '#333333',
+  },
+  returnModalButton: {
+    margin: 5,
+    paddingHorizontal: 15,
+    paddingVertical: 20,
+    alignItems: 'center',
+    width: '45%',
+    backgroundColor: 'rgba(52, 52, 52, 0.0)',
+  },
+  submitModalButton: {
+    margin: 5,
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 20,
+    width: '45%',
+    backgroundColor: 'rgba(52, 52, 52, 0.0)',
   },
   submitCard: {
     flex: 1,
@@ -334,8 +400,8 @@ const styles = StyleSheet.create({
   modalView: {
     position: 'absolute',
     margin: 30,
-    backgroundColor: '#D3D3D3',
-    borderRadius: 20,
+    backgroundColor: '#333333',
+    borderRadius: 10,
     paddingRight: 32,
     paddingLeft: 32,
     paddingTop: 30,
@@ -354,12 +420,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     paddingBottom: 40,
+    color: '#ffffff',
   },
   bottomModalButtons: {
     position: 'absolute',
-    bottom: 30,
+    bottom: 25,
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'center',
+  },
+  bottomCardText: {
+    color: '#ffffff',
+    fontWeight: 'bold',
+    fontSize: 15,
   },
 });
