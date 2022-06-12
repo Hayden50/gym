@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {
   View,
   Text,
@@ -16,6 +16,8 @@ import LiftCard from '../components/LiftCard';
 import DayButton from '../components/DayButton';
 import EditorTitle from '../components/EditorTitle';
 import theme from '../styles/theme.style';
+import {addDoc, collection, Timestamp} from 'firebase/firestore';
+import db from '../firebase';
 
 const colors = theme.COLORS;
 const colorArr = [
@@ -30,6 +32,7 @@ const colorArr = [
 
 const possibleNums = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 let origButtonStatusArray = [false, false, false, false, false, false, false];
+let origWorkoutName = '';
 
 export default function Editor({navigation}) {
   const [lift, setLift] = useState('');
@@ -37,7 +40,7 @@ export default function Editor({navigation}) {
   const [liftArray, setLiftArray] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [liftCount, setLiftCount] = useState(0);
-  const [workoutName, setWorkoutName] = useState('');
+  const [workoutName, setWorkoutName] = useState(origWorkoutName);
   const [buttonStatusArr, setButtonStatusArr] = useState(origButtonStatusArray);
   const [, updateState] = useState();
   const forceUpdate = useCallback(() => updateState({}), []);
@@ -46,6 +49,7 @@ export default function Editor({navigation}) {
 
   const handleAddLift = () => {
     if (lift !== null && lift !== '' && nums !== null && nums !== -1) {
+      console.log(workoutName);
       let i = 0;
       while (i < 9) {
         if (nums === possibleNums[i]) {
@@ -115,9 +119,22 @@ export default function Editor({navigation}) {
     }
   };
 
-  const handleSubmitClick = () => {
+  const submitToFireBase = async () => {
+    console.log('HELLO', toString(workoutName));
     for (const day of buttonStatusArr) {
       if (day === true) {
+        try {
+          const workoutCol = collection(db, 'workouts');
+          await addDoc(workoutCol, {
+            name: workoutName,
+            color: colorArr[currentColor],
+            daysOfRotation: buttonStatusArr,
+            lifts: liftArray,
+            createdAt: Timestamp.now(),
+          });
+        } catch (e) {
+          console.error('Error adding document: ', e);
+        }
         navigation.navigate('Home');
         return;
       }
@@ -206,7 +223,7 @@ export default function Editor({navigation}) {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.submitModalButton}
-                onPress={() => handleSubmitClick()}>
+                onPress={() => submitToFireBase()}>
                 <Text> </Text>
               </TouchableOpacity>
             </View>
@@ -241,8 +258,8 @@ export default function Editor({navigation}) {
 
           <View style={styles.cardBox}>
             <TextInput
-              placeholder="Workout Name"
-              placeholderTextColor={'#DEDEDE'}
+              placeholder="Lift Name"
+              placeholderTextColor={colors.light_light_gray}
               onChangeText={newText => setLift(newText)}
               value={lift}
               style={styles.placeholderWorkoutInput}
@@ -251,7 +268,7 @@ export default function Editor({navigation}) {
               <TextInput
                 type={'number'}
                 placeholder="Number of Sets"
-                placeholderTextColor={'#DEDEDE'}
+                placeholderTextColor={colors.light_light_gray}
                 keyboardType="number-pad"
                 onChangeText={newText => setNums(newText)}
                 maxLength={1}
@@ -304,9 +321,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderStyle: 'solid',
     borderWidth: 1,
-    borderColor: '#0000000',
+    borderColor: colors.black,
     borderRadius: 10,
-    backgroundColor: '#333333',
+    backgroundColor: colors.light_gray,
     height: 80,
   },
   scrollView: {
@@ -314,7 +331,7 @@ const styles = StyleSheet.create({
     paddingTop: 37.5,
   },
   fullView: {
-    backgroundColor: '#191919',
+    backgroundColor: colors.dark_gray,
     flex: 1,
   },
   addLiftButton: {
@@ -331,10 +348,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     paddingVertical: 10,
     borderWidth: 1,
-    borderColor: '#000000',
+    borderColor: colors.black,
     flexDirection: 'row',
     borderRadius: 10,
-    backgroundColor: '#333333',
+    backgroundColor: colors.light_gray,
   },
   removeButton: {
     width: '10%',
@@ -362,7 +379,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: '45%',
     borderRadius: 10,
-    backgroundColor: '#333333',
+    backgroundColor: colors.light_gray,
   },
   submitButton: {
     margin: 5,
@@ -372,7 +389,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: '45%',
     borderRadius: 10,
-    backgroundColor: '#333333',
+    backgroundColor: colors.light_gray,
   },
   returnModalButton: {
     margin: 5,
@@ -404,14 +421,14 @@ const styles = StyleSheet.create({
   modalView: {
     position: 'absolute',
     margin: 30,
-    backgroundColor: '#333333',
+    backgroundColor: colors.light_gray,
     borderRadius: 10,
     paddingRight: 32,
     paddingLeft: 32,
     paddingTop: 30,
     paddingBottom: 30,
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -424,7 +441,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     paddingBottom: 40,
-    color: '#ffffff',
+    color: colors.white,
   },
   bottomModalButtons: {
     position: 'absolute',
@@ -434,7 +451,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   bottomCardText: {
-    color: '#ffffff',
+    color: colors.white,
     fontWeight: 'bold',
     fontSize: 15,
   },

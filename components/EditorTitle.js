@@ -16,7 +16,7 @@ const EditorTitle = props => {
         <TextInput
           placeholder="Name Your Workout"
           placeholderTextColor={theme.COLORS.light_gray}
-          onChange={props.onChange}
+          onChangeText={props.onChange}
           style={{...styles.title, color: props.colorArr[props.currentColor]}}
           maxLength={19}
         />
