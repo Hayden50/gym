@@ -1,30 +1,45 @@
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import db from '../firebase';
+import {doc, getDoc} from 'firebase/firestore';
+import theme from '../styles/theme.style';
 
 export default function WeekCalendar() {
+  const [liftObj, setLiftObj] = useState({});
+  const [lifts, setLifts] = useState([]);
+
+  useEffect(() => {
+    async function getCurrentObject(id) {
+      const docRef = doc(db, 'workouts', id);
+      const object = await getDoc(docRef);
+      setLiftObj(object.data());
+      setLifts(object.data().lifts);
+    }
+    getCurrentObject('Test Workout');
+  }, []);
+  console.log(lifts);
+
   return (
     <View style={styles.fullBody}>
-      <CurrentDay />
+      <CurrentDay title={liftObj.name} lifts={lifts} color={liftObj.color} />
       <OffDay />
       <OffDay />
       <OffDay />
       <OffDay />
       <OffDay />
       <OffDay />
-      <Text style={styles.text}>WeekCalendar</Text>
     </View>
   );
 }
 
-const CurrentDay = () => {
+const CurrentDay = props => {
   return (
-    <View style={styles.currentDay}>
-      <Text style={styles.currentDayTitle}>Current Day - WORKOUT NAME</Text>
+    <View style={{...styles.currentDay}}>
+      <Text style={styles.currentDayTitle}>{props.title}</Text>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-        <LiftTile />
-        <LiftTile />
-        <LiftTile />
-        <LiftTile />
+        {props.lifts.map((lift, index) => {
+          return <LiftTile name={lift.name} key={index} color={props.color} />;
+        })}
       </ScrollView>
     </View>
   );
@@ -33,7 +48,7 @@ const CurrentDay = () => {
 const OffDay = () => {
   return (
     <View style={styles.offDay}>
-      <Text>OFF DAY TITLE</Text>
+      <Text style={styles.offDayTitle}>OFF DAY TITLE</Text>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         <Text>HI1 - </Text>
         <Text>HI2 - </Text>
@@ -43,10 +58,10 @@ const OffDay = () => {
   );
 };
 
-const LiftTile = () => {
+const LiftTile = props => {
   return (
-    <View style={styles.liftTile}>
-      <Text>TEMP</Text>
+    <View style={{...styles.liftTile, backgroundColor: props.color}}>
+      <Text>{props.name}</Text>
     </View>
   );
 };
@@ -56,7 +71,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   fullBody: {
-    backgroundColor: 'white',
+    backgroundColor: theme.COLORS.dark_gray,
     height: '90%',
   },
   currentDay: {
@@ -64,6 +79,7 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     borderRadius: 10,
+    backgroundColor: theme.COLORS.light_gray,
   },
   leftSideScroll: {},
   liftTile: {
@@ -78,11 +94,17 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     marginBottom: 0,
+    color: 'white',
   },
   offDay: {
     borderWidth: 1,
     borderRadius: 10,
     margin: 10,
     padding: 10,
+    height: 75,
+    backgroundColor: theme.COLORS.light_gray,
+  },
+  offDayTitle: {
+    color: 'white',
   },
 });

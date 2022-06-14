@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -16,7 +16,7 @@ import LiftCard from '../components/LiftCard';
 import DayButton from '../components/DayButton';
 import EditorTitle from '../components/EditorTitle';
 import theme from '../styles/theme.style';
-import {addDoc, collection, Timestamp} from 'firebase/firestore';
+import {setDoc, doc, Timestamp} from 'firebase/firestore';
 import db from '../firebase';
 
 const colors = theme.COLORS;
@@ -120,12 +120,11 @@ export default function Editor({navigation}) {
   };
 
   const submitToFireBase = async () => {
-    console.log('HELLO', toString(workoutName));
     for (const day of buttonStatusArr) {
       if (day === true) {
         try {
-          const workoutCol = collection(db, 'workouts');
-          await addDoc(workoutCol, {
+          const workoutCol = doc(db, 'workouts', workoutName);
+          await setDoc(workoutCol, {
             name: workoutName,
             color: colorArr[currentColor],
             daysOfRotation: buttonStatusArr,
