@@ -3,6 +3,7 @@ import Editor from './screens/Editor';
 import Home from './screens/Home';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Swiper from 'react-native-swiper';
 
 export default function App() {
   const Stack = createNativeStackNavigator();

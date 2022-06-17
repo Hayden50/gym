@@ -5,15 +5,25 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import WeekCalendar from '../components/WeekCalendar';
+import SchedulerModal from '../components/SchedulerModal';
 
 export default function Home({navigation}) {
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <SafeAreaView style={styles.fullView}>
-      <Text style={styles.title}>Weekly Outlook</Text>
+      <Text style={styles.title}>Your Weekly Outlook</Text>
       <WeekCalendar />
-      <BottomButtons onPress={() => navigation.navigate('Editor')} />
+      <BottomButtons
+        toEditor={() => navigation.navigate('Editor')}
+        toScheduler={() => setModalVisible(true)}
+      />
+      <SchedulerModal
+        modalVisible={modalVisible}
+        closeModal={() => setModalVisible(false)}
+      />
     </SafeAreaView>
   );
 }
@@ -21,10 +31,10 @@ export default function Home({navigation}) {
 const BottomButtons = props => {
   return (
     <View style={styles.bottomButtons}>
-      <TouchableOpacity style={styles.button}>
-        <Text>Your Created Workouts</Text>
+      <TouchableOpacity onPress={props.toScheduler} style={styles.button}>
+        <Text>Schedule Your Workouts</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={props.onPress} style={styles.button}>
+      <TouchableOpacity onPress={props.toEditor} style={styles.button}>
         <Text>Create a New Workout</Text>
       </TouchableOpacity>
     </View>
@@ -46,6 +56,7 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
     fontSize: 20,
+    fontStyle: 'italic',
     color: '#ffffff',
   },
   fullView: {

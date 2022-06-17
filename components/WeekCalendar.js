@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import db from '../firebase';
 import {doc, getDoc} from 'firebase/firestore';
 import theme from '../styles/theme.style';
+import OffDay from './OffDay';
 
 export default function WeekCalendar() {
   const [liftObj, setLiftObj] = useState({});
@@ -17,12 +18,10 @@ export default function WeekCalendar() {
     }
     getCurrentObject('Test Workout');
   }, []);
-  console.log(lifts);
 
   return (
     <View style={styles.fullBody}>
       <CurrentDay title={liftObj.name} lifts={lifts} color={liftObj.color} />
-      <OffDay />
       <OffDay />
       <OffDay />
       <OffDay />
@@ -45,23 +44,10 @@ const CurrentDay = props => {
   );
 };
 
-const OffDay = () => {
-  return (
-    <View style={styles.offDay}>
-      <Text style={styles.offDayTitle}>OFF DAY TITLE</Text>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-        <Text>HI1 - </Text>
-        <Text>HI2 - </Text>
-        <Text>HI3</Text>
-      </ScrollView>
-    </View>
-  );
-};
-
 const LiftTile = props => {
   return (
     <View style={{...styles.liftTile, backgroundColor: props.color}}>
-      <Text>{props.name}</Text>
+      <Text style={styles.liftTileTitle}>{props.name}</Text>
     </View>
   );
 };
@@ -79,6 +65,7 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     borderRadius: 10,
+    borderColor: theme.COLORS.blue,
     backgroundColor: theme.COLORS.light_gray,
   },
   leftSideScroll: {},
@@ -96,15 +83,8 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     color: 'white',
   },
-  offDay: {
-    borderWidth: 1,
-    borderRadius: 10,
-    margin: 10,
-    padding: 10,
-    height: 75,
-    backgroundColor: theme.COLORS.light_gray,
-  },
-  offDayTitle: {
-    color: 'white',
+  liftTileTitle: {
+    padding: 5,
+    fontWeight: 'bold',
   },
 });
