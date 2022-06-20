@@ -24,12 +24,11 @@ const SchedulerModal = props => {
         <View style={styles.modalBody}>
           <ModalDropdown
             options={dropdownOptions}
-            dropdownStyle={{color: theme.COLORS.green}}
+            dropdownStyle={{backgroundColor: theme.COLORS.green}}
             onSelect={(_, value) => setRotation(value + 1)}
             defaultValue={'Days in Rotation: '}
             style={styles.dropdownButton}
             textStyle={styles.dropdownText}
-            isFullWidth={true}
           />
           <RotationList rotation={rotation} />
           <CancelButton closeModal={props.closeModal} />
@@ -49,9 +48,12 @@ const RotationList = props => {
       <View style={styles.rotationListBody}>
         {arr.map((value, index) => {
           return (
-            <View style={styles.listCard} key={index}>
-              <Text style={styles.listCardText}>Lift Number {value}</Text>
-            </View>
+            <TouchableOpacity key={index}>
+              <View style={styles.listCard}>
+                <Text style={styles.listCardText}>Lift Number {value}</Text>
+                <Text style={styles.listCardSubtext}>Tap to Edit</Text>
+              </View>
+            </TouchableOpacity>
           );
         })}
       </View>
@@ -113,8 +115,15 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   listCardText: {
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    paddingBottom: 5,
     color: theme.COLORS.light_light_gray,
+  },
+  listCardSubtext: {
+    color: theme.COLORS.light_light_gray,
+    fontStyle: 'italic',
+    paddingHorizontal: 10,
   },
 });
 

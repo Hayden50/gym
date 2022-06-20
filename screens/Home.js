@@ -8,13 +8,24 @@ import {
 import React, {useState} from 'react';
 import WeekCalendar from '../components/WeekCalendar';
 import SchedulerModal from '../components/SchedulerModal';
+import {logout, auth} from '../firebase';
+import {onAuthStateChanged} from 'firebase/auth';
 
 export default function Home({navigation}) {
   const [modalVisible, setModalVisible] = useState(false);
+  const [userData, setUserData] = useState({});
+
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      setUserData(user);
+    } else {
+      navigation.navigate('Login');
+    }
+  });
 
   return (
     <SafeAreaView style={styles.fullView}>
-      <Text style={styles.title}>Your Weekly Outlook</Text>
+      <Header userData={userData} />
       <WeekCalendar />
       <BottomButtons
         toEditor={() => navigation.navigate('Editor')}
@@ -41,6 +52,17 @@ const BottomButtons = props => {
   );
 };
 
+const Header = () => {
+  return (
+    <View style={styles.header}>
+      <Text style={styles.title}>Your Weekly Outlook</Text>
+      <TouchableOpacity onPress={() => logout()}>
+        <Text style={{color: 'white'}}>X</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   button: {
     borderWidth: 1,
@@ -62,5 +84,10 @@ const styles = StyleSheet.create({
   fullView: {
     backgroundColor: '#191919',
     flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 20,
   },
 });
